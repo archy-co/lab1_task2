@@ -37,6 +37,7 @@ def check_rowwise(board: list) -> bool:
         deja_vu = []
         for cell in row:
             try:
+                int(cell)
                 if int(cell) in deja_vu:
                     return False
                 deja_vu.append(int(cell))
@@ -110,11 +111,10 @@ def check_block(board):
     Checks by the blocks of the same color
     '''
     blocks_items = get_blocks_items(board)
-    print(blocks_items)
     for items in blocks_items.values():
         items_str = ''.join(map(str, items))
 
-        if not check_rowwise(items_str):
+        if not check_rowwise([items_str]):
             return False
     return True
 
@@ -124,6 +124,17 @@ def check_block(board):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
+    print(validate_board([
+    "****1****",
+    "*** 2****",
+    "**  3****",
+    "*   4****",
+    "    56781",
+    "        *",
+    "2      **",
+    "      ***",
+    "3 4  ****"
+    ]))
     t_board = [\
         "**** ****",\
         "***1 ****",\
@@ -136,4 +147,4 @@ if __name__ == '__main__':
         "  2  ****"\
     ]
 
-    print(check_block(t_board))
+    print(validate_board(t_board))
