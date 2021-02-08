@@ -1,5 +1,6 @@
 '''
-# https://github.com/archy-co/lab1_task2
+Puzzle quiz game functions
+https://github.com/archy-co/lab1_task2
 '''
 
 
@@ -65,16 +66,65 @@ def transpose_rc(board: list) -> list:
 
     return n_board
 
+
+def get_item_block(coord: tuple) -> int:
+    '''
+    Gets item (x, y) coordinates on board and return its block number
+    (numeration begins from top to bottom)
+    '''
+    if (coord[0] >= 4 and coord[1] == 4) or (coord[0] == 4 and coord[1] <= 4):
+        return 1
+    if (coord[0] >= 3 and coord[1] == 5) or (coord[0] == 3 and coord[1] <= 5):
+        return 2
+    if (coord[0] >= 2 and coord[1] == 6) or (coord[0] == 2 and coord[1] <= 6):
+        return 3
+    if (coord[0] >= 1 and coord[1] == 7) or (coord[0] == 1 and coord[1] <= 7):
+        return 4
+    if (coord[0] >= 0 and coord[1] == 8) or (coord[0] == 0 and coord[1] <= 8):
+        return 5
+
+    return 0
+
+
+def get_blocks_items(board: list) -> list:
+    '''
+    Finds block for each element in table. Returns tuple where key is block number,
+    and value - list of items of the block
+    '''
+    block_items = dict()
+
+    for i in range(len(board)):
+        for j in range(len(board)):
+            try:
+                item = int(board[i][j])
+                item_block = get_item_block(tuple([j, i]))
+                block_items[item_block] = block_items.get(item_block, []) + [item]
+
+            except ValueError:
+                continue
+    return block_items
+
+
 def check_block(board):
     '''
     Checks by the blocks of the same color
     '''
-    pass
+    blocks_items = get_blocks_items(board)
+    print(blocks_items)
+    for items in blocks_items.values():
+        items_str = ''.join(map(str, items))
+
+        if not check_rowwise(items_str):
+            return False
+    return True
+
+
+
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-    board = [\
+    t_board = [\
         "**** ****",\
         "***1 ****",\
         "**  3****",\
@@ -86,4 +136,4 @@ if __name__ == '__main__':
         "  2  ****"\
     ]
 
-    print(check_rowwise(board))
+    print(check_block(t_board))
